@@ -1,0 +1,944 @@
+{
+	"info": {
+		"_postman_id": "5677537d-ca54-4e00-b034-719ee47f04fd",
+		"name": "ZAGS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22436460",
+		"_collection_link": "https://red-eclipse-883865.postman.co/workspace/regOffice~86a5e1a0-3d87-474b-bf06-140ed7f8804f/collection/22436460-5677537d-ca54-4e00-b034-719ee47f04fd?action=share&source=collection_link&creator=22436460"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Create admin user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request ID should not be empty\",() => {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\",() => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body include correct data type\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.data.staffid).to.be.a('number');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test(\"Request has the required fields\",() => {",
+									"    const requestData = pm.request.body.raw;",
+									"    const parseBody = JSON.parse(requestData);",
+									"    const requiredFields = [\"personalLastName\", \"personalFirstName\", \"personalMiddleName\", \"personalPhoneNumber\", \"personalNumberOfPassport\", \"dateofbirth\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(parseBody).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"personalLastName\": \"Семенов\",\n    \"personalFirstName\": \"Семен\",\n    \"personalMiddleName\": \"Семенович\",\n    \"personalPhoneNumber\": \"89102223355\",\n    \"personalNumberOfPassport\": \"0123456789\",\n    \"dateofbirth\": \"2000-11-11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sendAdminRequest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sendAdminRequest"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create admin user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"personalLastName\": \"Семенов\",\n    \"personalFirstName\": \"Семен\",\n    \"personalMiddleName\": \"Семенович\",\n    \"personalPhoneNumber\": \"0123456789\",\n    \"personalNumberOfPassport\": \"0000111111\",\n    \"dateofbirth\": \"2000-11-11\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://814ecc1d-ad10-4d43-8709-05bdd0418675.mock.pstmn.io/sendAdminRequest",
+									"protocol": "https",
+									"host": [
+										"814ecc1d-ad10-4d43-8709-05bdd0418675",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"sendAdminRequest"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"staffid\": \"20782\"\n    },\n    \"requestId\": \"\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Change status of application",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body include correct data type\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.data.applicationid).to.be.a('number');",
+									"    pm.expect(response.data.citizenid).to.be.a('number');",
+									"    pm.expect(response.data.applicantid).to.be.a('number');",
+									"    pm.expect(response.data.staffid).to.be.a('number');",
+									"    pm.expect(response.data.dateofapplication).to.be.a('string');",
+									"    pm.expect(response.data.kindofapplication).to.be.a('string');",
+									"    pm.expect(response.data.statusofapplication).to.be.a('string');",
+									"    pm.expect(response.data.channel).to.be.a('string');",
+									"    response.data.image === null",
+									"       ? pm.expect(response.data.image).to.be.null",
+									"       : pm.expect(response.data.image).to.match(/\\.(jpg|jpeg|png|gif|bmp|webp)$/i);",
+									"});",
+									"",
+									"pm.test(\"Response has the required fields\", () => {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist;",
+									"",
+									"    const requiredFields = [\"applicationid\", \"citizenid\", \"applicantid\", \"staffid\", \"dateofapplication\", \"kindofapplication\", \"statusofapplication\", \"channel\", \"image\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(responseData.data).to.have.property(field);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Request ID should not be empty\", () => {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"applId\": 40882,\n    \"staffid\": 20879,\n    \"action\": \"s\"\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/requestProcess",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requestProcess"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Change status of application",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"applId\": 40348,\n    \"staffid\": 20734,\n    \"action\": \"approved\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://814ecc1d-ad10-4d43-8709-05bdd0418675.mock.pstmn.io/requestProcess",
+									"protocol": "https",
+									"host": [
+										"814ecc1d-ad10-4d43-8709-05bdd0418675",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"requestProcess"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"applicationid\": 40348,\n        \"citizenid\": 41968,\n        \"applicantid\": 48114,\n        \"staffid\": 20734,\n        \"dateofapplication\": \"2024-11-22T09:51:21.258Z\",\n        \"kindofapplication\": \"Получение свидетельства о смерти\",\n        \"statusofapplication\": \"approved\",\n        \"channel\": \"unknown\",\n        \"image\": \"img/image.doc\"\n    }\n  \n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Get application with given ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist;",
+									"",
+									"    const requiredFields = [\"applicantid\", \"dateofapplication\", \"kindofapplication\", \"channel\", \"statusofapplication\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(responseData.data).to.have.property(field);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Request ID should not be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"getRandomInt = (min, max) => {",
+									"    min = Math.ceil(min);",
+									"    max = Math.floor(max);",
+									"    return Math.floor(Math.random() * (max - min + 1) + min);",
+									"};",
+									"const randomNum = getRandomInt(31093, 50000);",
+									"",
+									"pm.collectionVariables.set(\"applicationId\", randomNum);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}getApplStatus/{{applicationId}}",
+							"host": [
+								"{{baseUrl}}getApplStatus"
+							],
+							"path": [
+								"{{applicationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Request ID should not be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.have.property('data').that.is.an('array').that.is.not.empty;",
+									"",
+									"    const requiredFields = [\"applicationid\", \"citizenid\", \"applicantid\", \"staffid\", \"dateofapplication\", \"kindofapplication\", \"statusofapplication\", \"channel\", \"image\"];",
+									"    responseData.data.forEach(item => {",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(item).to.have.property(field);",
+									"        });",
+									"    });",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/getApplications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"getApplications"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User birth",
+			"item": [
+				{
+					"name": "Create user birth",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test(\"Field is Null\", () => {",
+									"    const requestBody = pm.request.body.raw;",
+									"    const parseBody = JSON.parse(requestBody);",
+									"    pm.expect(parseBody).to.have.property('dateOfMarriage', null),",
+									"    pm.expect(parseBody).to.have.property('newLastName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonLastName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonFirstName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonMiddleName', null),",
+									"    pm.expect(parseBody).to.have.property('birth_of_anotoherPerson', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonPassport', null),",
+									"    pm.expect(parseBody).to.have.property('death_dateOfDeath', null),",
+									"    pm.expect(parseBody).to.have.property('death_placeOfDeath', null)",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\",() => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Request ID should not be empty\",() => {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Response fields include correct data type\",() => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.data.applicantid).to.be.a('number'),",
+									"    pm.expect(response.data.citizenid).to.be.a('number'),",
+									"    pm.expect(response.data.applicationid).to.be.a('number'),",
+									"    pm.expect(response.data.birthcertificateid).to.be.a('number')",
+									"})",
+									"",
+									"pm.test(\"Response has the required fields\",() => {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist;",
+									"",
+									"    const requiredFields = [\"applicantid\", \"citizenid\", \"applicationid\", \"birthcertificateid\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(responseData.data).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mode\": \"birth\",\n    \"personalLastName\": \"Петров\",\n    \"personalFirstName\": \"Петр\",\n    \"personalMiddleName\": \"Петрович\",\n    \"personalPhoneNumber\": \"89533358813\",\n    \"personalNumberOfPassport\": \"012345678\",\n    \"citizenLastName\": \"Фамилия\",\n    \"citizenFirstName\": \"Имя\",\n    \"citizenMiddleName\": \"Отчество\",\n    \"citizenBirthDate\": \"12-11-2024\",\n    \"citizenNumberOfPassport\": \"0102456789\",\n    \"citizenGender\": \"Мужской\",\n    \"dateOfMarriage\": null,\n    \"newLastName\": null,\n    \"anotherPersonLastName\": null,\n    \"anotherPersonFirstName\": null,\n    \"anotherPersonMiddleName\": null,\n    \"birth_of_anotoherPerson\": null,\n    \"anotherPersonPassport\": null,\n    \"birth_place\": \"Орел\",\n    \"birth_mother\": \"Иванова Светлана Юрьевна\",\n    \"birth_father\": \"Иванов Михаил Андреевич\",\n    \"death_dateOfDeath\": null,\n    \"death_placeOfDeath\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sendUserRequest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sendUserRequest"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create user birth",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mode\": \"birth\",\n    \"personalLastName\": \"Петров\",\n    \"personalFirstName\": \"Петр\",\n    \"personalMiddleName\": \"Петрович\",\n    \"personalPhoneNumber\": \"89533358813\",\n    \"personalNumberOfPassport\": \"012345678\",\n    \"citizenLastName\": \"Фамилия\",\n    \"citizenFirstName\": \"Имя\",\n    \"citizenMiddleName\": \"Отчество\",\n    \"citizenBirthDate\": \"2000-11-20\",\n    \"citizenNumberOfPassport\": \"0102456789\",\n    \"citizenGender\": \"Мужской\",\n    \"dateOfMarriage\": null,\n    \"newLastName\": null,\n    \"anotherPersonLastName\": null,\n    \"anotherPersonFirstName\": null,\n    \"anotherPersonMiddleName\": null,\n    \"birth_of_anotoherPerson\": null,\n    \"anotherPersonPassport\": null,\n    \"birth_place\": \"Москва\",\n    \"birth_mother\": \"Иванова Светлана Юрьевна\",\n    \"birth_father\": \"Иванов Михаил Андреевич\",\n    \"death_dateOfDeath\": null,\n    \"death_placeOfDeath\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://d25db543-3677-4d12-b03d-1c2e8c727efd.mock.pstmn.io/sendUserRequest",
+									"protocol": "https",
+									"host": [
+										"d25db543-3677-4d12-b03d-1c2e8c727efd",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"sendUserRequest"
+									]
+								}
+							},
+							"status": "Moved Permanently",
+							"code": 301,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"applicantid\": 48222,\n        \"citizenid\": 42066,\n        \"applicationid\": \"40446\",\n        \"birthcertificateid\": \"12\"\n    },\n    \"requestId\": \"1fde7170-d36c-4894-8ab7-e8e985fd233f\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User death",
+			"item": [
+				{
+					"name": "Create user death",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test(\"Field is null\", () => {",
+									"    const requestBody = pm.request.body.raw;",
+									"    const parseBody = JSON.parse(requestBody);",
+									"    pm.expect(parseBody).to.have.property('dateOfMarriage', null),",
+									"    pm.expect(parseBody).to.have.property('newLastName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonLastName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonFirstName', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonMiddleName', null),",
+									"    pm.expect(parseBody).to.have.property('birth_of_anotoherPerson', null),",
+									"    pm.expect(parseBody).to.have.property('anotherPersonPassport', null),",
+									"    pm.expect(parseBody).to.have.property('birth_mother', null),",
+									"    pm.expect(parseBody).to.have.property('birth_father', null),",
+									"    pm.expect(parseBody).to.have.property('birth_place', null)",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\",() => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response fields should not be empty\",() => {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.data.applicantid).to.exist.and.to.not.be.NaN.and.to.not.equal(0);",
+									"    pm.expect(responseData.data.citizenid).to.exist.and.to.not.be.NaN.and.to.not.equal(0);",
+									"    pm.expect(responseData.data.applicationid).to.exist.and.to.not.be.NaN.and.to.not.equal(0);",
+									"    pm.expect(responseData.data.deathcertificateid).to.exist.and.to.not.be.NaN.and.to.not.equal(0);",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Response fields include correct data type\",() => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.data.applicantid).to.be.a('number');",
+									"    pm.expect(response.data.citizenid).to.be.a('number');",
+									"    pm.expect(response.data.applicationid).to.be.a('number');",
+									"    pm.expect(response.data.deathcertificateid).to.be.a('number');",
+									"});",
+									"",
+									"pm.test(\"Response has the required fields\",() => {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist;",
+									"",
+									"    const requiredFields = [\"applicantid\", \"citizenid\", \"applicationid\", \"deathcertificateid\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(responseData.data).to.have.property(field);",
+									"    });",
+									"});",
+									"",
+									"",
+									"// pm.test(\"Database validation\", function () {",
+									"//     var response = pm.response.json();",
+									"//     var mockDatabase = [ ",
+									"//         {",
+									"//         \"applicantid\": 48535,",
+									"//         \"citizenid\": 42344,",
+									"//         \"applicationid\": 40714,",
+									"//         \"deathcertificateid\": 10205",
+									"//     }        ",
+									"//      ];",
+									"",
+									"//     mockDatabase.forEach(function (item) {",
+									"//         var matchingItem = response.data.applicantid === item.applicantid;",
+									"",
+									"//         pm.expect(matchingItem, `Item with id ${item.applicantid} is not found in the response`).to.exist;",
+									"",
+									"//         if (matchingItem) {",
+									"//             pm.expect(matchingItem.name, `Name for id ${item.applicantid} does not match`).to.equal(item.applicantid);",
+									"//         }",
+									"//     });",
+									"// });",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mode\": \"death\",\n    \"personalLastName\": \"Антонов\",\n    \"personalFirstName\": \"Юрий\",\n    \"personalMiddleName\": \"Иванович\",\n    \"personalPhoneNumber\": \"89991112255\",\n    \"personalNumberOfPassport\": \"010236925\",\n    \"citizenLastName\": \"Семенов\",\n    \"citizenFirstName\": \"Семен\",\n    \"citizenMiddleName\": \"Семенович\",\n    \"citizenBirthDate\": \"1850-01-11\",\n    \"citizenNumberOfPassport\": \"3322147563\",\n    \"citizenGender\": \"Мусжкой\",\n    \"dateOfMarriage\": null,\n    \"newLastName\": null,\n    \"anotherPersonLastName\": null,\n    \"anotherPersonFirstName\": null,\n    \"anotherPersonMiddleName\": null,\n    \"birth_of_anotoherPerson\": null,\n    \"anotherPersonPassport\": null,\n    \"birth_place\": null,\n    \"birth_mother\": null,\n    \"birth_father\": null,\n    \"death_dateOfDeath\": \"2015-03-15\",\n    \"death_placeOfDeath\": \"Орел\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sendUserRequest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sendUserRequest"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create user death",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mode\": \"death\",\n    \"personalLastName\": \"Ким\",\n    \"personalFirstName\": \"Юрий\",\n    \"personalMiddleName\": \"Иванович\",\n    \"personalPhoneNumber\": \"89991112255\",\n    \"personalNumberOfPassport\": \"010236925\",\n    \"citizenLastName\": \"Семенов\",\n    \"citizenFirstName\": \"Семен\",\n    \"citizenMiddleName\": \"Семенович\",\n    \"citizenBirthDate\": \"1850-01-11\",\n    \"citizenNumberOfPassport\": \"3322147563\",\n    \"citizenGender\": \"Мусжкой\",\n    \"dateOfMarriage\": null,\n    \"newLastName\": null,\n    \"anotherPersonLastName\": null,\n    \"anotherPersonFirstName\": null,\n    \"anotherPersonMiddleName\": null,\n    \"birth_of_anotoherPerson\": null,\n    \"anotherPersonPassport\": null,\n    \"birth_place\": null,\n    \"birth_mother\": null,\n    \"birth_father\": null,\n    \"death_dateOfDeath\": \"2015-03-15\",\n    \"death_placeOfDeath\": \"Орел\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://963ae740-45d0-4efe-9437-050f02b9ddfa.mock.pstmn.io/sendUserRequest",
+									"protocol": "https",
+									"host": [
+										"963ae740-45d0-4efe-9437-050f02b9ddfa",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"sendUserRequest"
+									]
+								}
+							},
+							"status": "Continue",
+							"code": 100,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"applicantid\": 48339,\n        \"citizenid\": 42175,\n        \"applicationid\": 40554,\n        \"deathcertificateid\": \"10169\"\n    },\n    \"requestId\": \"cdacc7f1-c6eb-416e-a277-5eb6e5f2e76c\"\n}"
+						},
+						{
+							"name": "Create user death mockDB",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mode\": \"death\",\n    \"personalLastName\": \"Ким\",\n    \"personalFirstName\": \"Юрий\",\n    \"personalMiddleName\": \"Иванович\",\n    \"personalPhoneNumber\": \"89991112255\",\n    \"personalNumberOfPassport\": \"010236925\",\n    \"citizenLastName\": \"Семенов\",\n    \"citizenFirstName\": \"Семен\",\n    \"citizenMiddleName\": \"Семенович\",\n    \"citizenBirthDate\": \"1850-01-11\",\n    \"citizenNumberOfPassport\": \"3322147563\",\n    \"citizenGender\": \"Мусжкой\",\n    \"dateOfMarriage\": null,\n    \"newLastName\": null,\n    \"anotherPersonLastName\": null,\n    \"anotherPersonFirstName\": null,\n    \"anotherPersonMiddleName\": null,\n    \"birth_of_anotoherPerson\": null,\n    \"anotherPersonPassport\": null,\n    \"birth_place\": null,\n    \"birth_mother\": null,\n    \"birth_father\": null,\n    \"death_dateOfDeath\": \"2015-03-15\",\n    \"death_placeOfDeath\": \"Орел\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://963ae740-45d0-4efe-9437-050f02b9ddfa.mock.pstmn.io/sendUserRequest",
+									"protocol": "https",
+									"host": [
+										"963ae740-45d0-4efe-9437-050f02b9ddfa",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"sendUserRequest"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 25 Nov 2024 09:16:49 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "148"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"94-ztZu6uggcvNSrIQxCjqGcARU4+s\""
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15768000; includeSubdomains; preload"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"applicantid\": 48543,\n        \"citizenid\": 42351,\n        \"applicationid\": 40721,\n        \"deathcertificateid\": 10211\n    },\n    \"requestId\": \"3c4a5357-ebf1-4930-b843-63d10959247a\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User marrige",
+			"item": [
+				{
+					"name": "Create user marrige",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\",() => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Request ID should not be empty\",() => {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.requestId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"pm.test(\"Response fields include correct data type\",() => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.data.applicantid).to.be.a('number'),",
+									"    pm.expect(response.data.citizenid).to.be.a('number'),",
+									"    pm.expect(response.data.applicationid).to.be.a('number'),",
+									"    pm.expect(response.data.merrigecertificateid).to.be.a('number')",
+									"})",
+									"",
+									"pm.test(\"Response has the required fields\",() => {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist;",
+									"",
+									"    const requiredFields = [\"applicantid\", \"citizenid\", \"applicationid\", \"merrigecertificateid\"];",
+									"    requiredFields.forEach(field => {",
+									"        pm.expect(responseData.data).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test(\"fieldIsNull\", () => {",
+									"    const requestBody = pm.request.body.raw;",
+									"    const parseBody = JSON.parse(requestBody);",
+									"    pm.expect(parseBody).to.have.property('birth_place', null),",
+									"    pm.expect(parseBody).to.have.property('birth_mother', null),",
+									"    pm.expect(parseBody).to.have.property('birth_father', null),",
+									"    pm.expect(parseBody).to.have.property('death_dateOfDeath', null),",
+									"    pm.expect(parseBody).to.have.property('death_placeOfDeath', null)",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mode\": \"wedding\",\n    \"personalLastName\": \"Иванов\",\n    \"personalFirstName\": \"Иван\",\n    \"personalMiddleName\": \"Иванович\",\n    \"personalPhoneNumber\": \"89115632428\",\n    \"personalNumberOfPassport\": \"459833669\",\n    \"citizenLastName\": \"Москва\",\n    \"citizenFirstName\": \"Иванова\",\n    \"citizenMiddleName\": \"Иванова\",\n    \"citizenBirthDate\": \"2020-01-20\",\n    \"citizenNumberOfPassport\": \"0123456789\",\n    \"citizenGender\": \"Мужской\",\n    \"dateOfMarriage\": \"1990-12-12\",\n    \"newLastName\": \"Петров\",\n    \"anotherPersonLastName\": \"Петр\",\n    \"anotherPersonFirstName\": \"Петрович\",\n    \"anotherPersonMiddleName\": \"Петровна\",\n    \"birth_of_anotoherPerson\": \"1990-12-12\",\n    \"anotherPersonPassport\": \"0123456789\",\n    \"birth_place\": null,\n    \"birth_mother\": null,\n    \"birth_father\": null,\n    \"death_dateOfDeath\": null,\n    \"death_placeOfDeath\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sendUserRequest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sendUserRequest"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create user marrige",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mode\": \"wedding\",\n    \"personalLastName\": \"{{$randomLastName}}\",\n    \"personalFirstName\": \"{{$randomFirstName}}\",\n    \"personalMiddleName\": \"{{$randomFirstName}}\",\n    \"personalPhoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"personalNumberOfPassport\": \"{{$random}}\",\n    \"citizenLastName\": \"{{$randomLastName}}\",\n    \"citizenFirstName\": \"23123\",\n    \"citizenMiddleName\": \"123123\",\n    \"citizenBirthDate\": \"1212-02-11\",\n    \"citizenNumberOfPassport\": \"121231212312\",\n    \"citizenGender\": \"123123123\",\n    \"dateOfMarriage\": \"1212-12-12\",\n    \"newLastName\": \"1212312312\",\n    \"anotherPersonLastName\": \"3123123\",\n    \"anotherPersonFirstName\": \"123123\",\n    \"anotherPersonMiddleName\": \"1231231\",\n    \"birth_of_anotoherPerson\": \"0121-02-21\",\n    \"anotherPersonPassport\": \"123123123\",\n    \"birth_place\": null,\n    \"birth_mother\": null,\n    \"birth_father\": null,\n    \"death_dateOfDeath\": null,\n    \"death_placeOfDeath\": null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://d25db543-3677-4d12-b03d-1c2e8c727efd.mock.pstmn.io/sendUserRequest",
+									"protocol": "https",
+									"host": [
+										"d25db543-3677-4d12-b03d-1c2e8c727efd",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"sendUserRequest"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"applicantid\": 48312,\n        \"citizenid\": 42148,\n        \"applicationid\": 40528,\n        \"merrigecertificateid\": 18908\n    },\n    \"requestId\": \"f6a6adac-8b09-49fb-8cb7-df701ea3e215\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "user",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "applicationId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
